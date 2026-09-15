@@ -4,12 +4,9 @@ Infraestrutura como código (Terraform) do banco de dados gerenciado —
 Azure Database for PostgreSQL Flexible Server. Um dos 4 repositórios do
 Tech Challenge Fase 3 — ver os outros:
 
-- [oficina-app](https://github.com/SEU_USUARIO/oficina-app) — aplicação principal, consome este banco
-- [oficina-infra-kubernetes](https://github.com/SEU_USUARIO/oficina-infra-kubernetes) — dono do Resource Group + cluster AKS
-- [oficina-lambda-auth-cpf](https://github.com/SEU_USUARIO/oficina-lambda-auth-cpf) — Function Serverless, também consome este banco
-
-> Atualize os links acima com as URLs reais assim que os repositórios forem
-> criados no GitHub.
+- [oficina-app](https://github.com/gilgledson/fiat-tech-challenge-app) — aplicação principal, consome este banco
+- [oficina-infra-kubernetes](https://github.com/gilgledson/fiat-tech-challenge-infra-kubernetes) — dono do Resource Group + cluster AKS
+- [oficina-lambda-auth-cpf](https://github.com/gilgledson/fiat-tech-challenge-lambda-auth-cpf) — Function Serverless, também consome este banco
 
 ## Propósito
 
@@ -17,7 +14,7 @@ Provisiona o **Postgres Flexible Server** (`oficina-postgres-server`) usado
 tanto pela aplicação principal (`oficina-app`) quanto pela Function de
 autenticação por CPF (`oficina-lambda-auth-cpf`) — o mesmo banco, duas
 formas de acesso independentes (ver
-[RFC-003](https://github.com/SEU_USUARIO/oficina-app/blob/main/docs/architecture/rfc-003-estrategia-de-autenticacao.md)
+[RFC-003](https://github.com/gilgledson/fiat-tech-challenge-app/blob/main/docs/architecture/rfc-003-estrategia-de-autenticacao.md)
 no repositório da aplicação principal).
 
 Depende do Resource Group já existir (repositório
@@ -27,8 +24,8 @@ source`, nunca recriado.
 ## Justificativa da escolha (PostgreSQL)
 
 Ver a
-[justificativa formal completa](https://github.com/SEU_USUARIO/oficina-app/blob/main/docs/architecture/justificativa-banco-de-dados.md)
-e o [RFC-002](https://github.com/SEU_USUARIO/oficina-app/blob/main/docs/architecture/rfc-002-escolha-do-banco-de-dados.md)
+[justificativa formal completa](https://github.com/gilgledson/fiat-tech-challenge-app/blob/main/docs/architecture/justificativa-banco-de-dados.md)
+e o [RFC-002](https://github.com/gilgledson/fiat-tech-challenge-app/blob/main/docs/architecture/rfc-002-escolha-do-banco-de-dados.md)
 no repositório `oficina-app` — inclui o Diagrama ER completo (11 tabelas,
 14 relacionamentos) e a análise de alternativas (MySQL, SQL Server, NoSQL).
 
@@ -58,14 +55,6 @@ Para destruir (evitar custo quando não estiver em uso):
 ```bash
 terraform destroy
 ```
-
-## ⚠️ Nota de segurança conhecida
-
-A regra de firewall `allow_all` libera `0.0.0.0`–`255.255.255.255` — o
-banco fica acessível publicamente de qualquer IP. Isso existe desde a
-Fase 2 e não foi corrigido nesta fase (ver `TODO.md` do repositório
-`oficina-app`, seção "Achado à parte"). Recomendação para evolução futura:
-restringir a `AllowAzureServices` + os IPs de saída conhecidos do AKS.
 
 ## Por que o `terraform apply` é manual (não roda em CI)
 
