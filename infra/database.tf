@@ -7,6 +7,14 @@ resource "azurerm_postgresql_flexible_server" "oficina_db" {
   administrator_password = var.db_admin_password
   sku_name               = "B_Standard_B1ms"
   zone                   = "1"
+
+  # A Azure nunca devolve a senha administrativa pro Terraform conferir, então
+  # depois de um `terraform import` esse campo sempre aparece como "mudança
+  # pendente" mesmo sem ter mudado de fato — ignorar evita que um `apply`
+  # de rotina troque a senha do banco em produção sem intenção.
+  lifecycle {
+    ignore_changes = [administrator_password]
+  }
 }
 
 resource "azurerm_postgresql_flexible_server_firewall_rule" "allow_azure" {
