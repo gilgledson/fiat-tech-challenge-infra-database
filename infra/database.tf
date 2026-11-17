@@ -37,3 +37,14 @@ resource "azurerm_postgresql_flexible_server_firewall_rule" "allow_azure" {
 # Se precisar conectar de uma máquina local pontualmente (ex: psql direto),
 # adicione uma regra temporária escopada só ao seu IP público, e remova
 # depois.
+
+# Fase 4: cada microsserviço tem o próprio banco. O OS Service continua no
+# database padrão "postgres"; o Billing Service usa este. Ficam no mesmo
+# servidor para não pagar um segundo, mas um serviço nunca acessa o database
+# do outro.
+resource "azurerm_postgresql_flexible_server_database" "billing" {
+  name      = "billing"
+  server_id = azurerm_postgresql_flexible_server.oficina_db.id
+  charset   = "UTF8"
+  collation = "en_US.utf8"
+}
