@@ -17,6 +17,18 @@ formas de acesso independentes (ver
 [RFC-003](https://github.com/gilgledson/fiat-tech-challenge-app/blob/main/docs/architecture/rfc-003-estrategia-de-autenticacao.md)
 no repositório da aplicação principal).
 
+Na Fase 4, com a separação em microsserviços, o servidor passou a ter dois
+databases, um por serviço que usa Postgres:
+
+| Database | Dono | Observação |
+|---|---|---|
+| `postgres` | OS Service ([fiat-tech-challenge-ddd](https://github.com/gilgledson/fiat-tech-challenge-ddd)) | Também lido pela Function de CPF |
+| `billing` | Billing Service ([oficina-billing-service](https://github.com/gilgledson/oficina-billing-service)) | Criado por este repositório |
+
+Os dois ficam no mesmo servidor para não pagar um segundo, mas um serviço
+nunca acessa o database do outro. O Execution Service usa MongoDB, que fica
+no repositório de infraestrutura Kubernetes.
+
 Depende do Resource Group já existir (repositório
 `oficina-infra-kubernetes` aplicado primeiro) — lido aqui via `data
 source`, nunca recriado.
